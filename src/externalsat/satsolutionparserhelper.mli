@@ -1,0 +1,1 @@
+type parsedSolution = ParsedSat of int list | ParsedUnsat | ParsedError of string

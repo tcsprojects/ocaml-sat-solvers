@@ -1,0 +1,53 @@
+#
+# This file is assumed to be included in a Makefile
+# that previously already included the respective
+# Config file.
+#
+# It sets the variable SATSOLVERSMODS containing all
+# enabled and required sat solver modules.
+#
+# It also sets the variable HASSAT stating whether
+# there is at least one sat solver enabled.
+#
+# It uses the environment variable SATSOLVERSOBJ
+# containing a path to the object directory.
+#
+
+
+###########################################################
+#
+# INCLUDING SAT SOLVER CONFIGURATION
+#
+###########################################################
+
+ifeq ($(strip $(wildcard $(SATSOLVERSROOT)/Solvers)),)
+include $(SATSOLVERSROOT)/Solvers.default
+else
+include $(SATSOLVERSROOT)/Solvers
+endif
+
+
+ifeq "$(WITH_ZCHAFF)" "YES"
+
+ZCHAFFOBJS=$(SATSOLVERSOBJ)/zchaff_ocaml_wrapper.o $(SATSOLVERSOBJ)/zchaff.cmx $(SATSOLVERSOBJ)/zchaffwrapper.cmx $(ZCHAFFDIR)/libsat.a
+
+HASSAT=YES
+endif
+
+
+ifeq "$(WITH_MINISAT)" "YES"
+
+MINISATOBJS=$(OCAML_DIR)/libasmrun.a $(SATSOLVERSOBJ)/MiniSATWrap.o $(SATSOLVERSOBJ)/minisat.cmx $(SATSOLVERSOBJ)/minisatwrapper.cmx $(MINISATDIR)/simp/lib.a -cclib -lz -
+
+HASSAT=YES
+endif
+
+
+ifeq "$(WITH_PICOSAT)" "YES"
+
+PICOSATOBJS=$(SATSOLVERSOBJ)/PicoSATWrap.o $(SATSOLVERSOBJ)/picosat.cmx $(SATSOLVERSOBJ)/picosatwrapper.cmx $(PICOSATDIR)/libpicosat.a
+
+HASSAT=YES
+endif
+
+SATSOLVERMODS=$(PICOSATOBJS) $(MINISATOBJS) $(ZCHAFFOBJS)
