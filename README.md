@@ -16,7 +16,7 @@ We currently support the following SAT Solvers:
 ## Installation
 
 - Install OCaml, Make and the SAT solvers that you'd like to use.
-- Create a copy of Config.include, name it Config and modify it to fit your configuration
+- Create a copy of Config.default, name it Config and modify it to fit your configuration
 - Create a copy of Solvers.default, name it Solvers and modify it to fit your configuration
 - Run make
 
