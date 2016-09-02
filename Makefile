@@ -14,7 +14,9 @@ endif
 
 # OCAMLOPT=ocamlopt -cclib -static
 
-all: satwrapper satsolvers zchaff minisat picosat pseudosat preprocessor externalsat tester tester2
+all: satwrapper satsolvers zchaff minisat picosat pseudosat preprocessor externalsat
+
+#tester tester2
 
 ifeq "$(COMPILE_WITH_OPT)" "YES"
 

@@ -9,3 +9,6 @@
 *.cmxa
 bin/*
 Config
+src/externalsat/satsolutionlexer.ml
+src/externalsat/satsolutionparser.ml
+src/externalsat/satsolutionparser.mli
