@@ -1,0 +1,53 @@
+SAT_COMPILE_PATH := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+
+ifneq ($(strip $(wildcard SatConfig)),)
+	include SatConfig
+endif
+
+ifneq ($(strip $(PICOSAT)),)
+	PICOSATFLAGS = -lflag `pwd`/_build/PicoSATWrap.o -lflag $(PICOSAT)
+	PICOSATDEPS = _build/PicoSATWrap.o
+endif
+
+ifneq ($(strip $(ZCHAFF)),)
+	ZCHAFFFLAGS = -ocamlopt "ocamlopt -cc g++" -lflag `pwd`/_build/ZchaffWrap.o -lflag $(ZCHAFF)
+	ZCHAFFDEPS = _build/ZchaffWrap.o
+endif
+
+ifneq ($(strip $(MINISAT)),)
+	MINISATFLAGS =  -ocamlopt "ocamlopt -cc g++" -lflag `pwd`/_build/MiniSATWrap.o -lflag $(MINISAT)
+	MINISATDEPS = _build/MiniSATWrap.o
+endif
+
+SATFLAGS = $(PICOSATFLAGS) $(ZCHAFFFLAGS) $(MINISATFLAGS)
+SATDEPS = $(PICOSATDEPS) $(ZCHAFFDEPS) $(MINISATDEPS)
+
+
+generatesat: $(SATDEPS)
+	rm -f ./temp/generatedsat.ml
+	echo "" > ./temp/generatedsat.ml
+ifneq ($(strip $(PICOSAT)),)
+	echo "open Picosat;;" >> ./temp/generatedsat.ml
+	echo "open Picosatwrapper;;" >> ./temp/generatedsat.ml
+endif
+ifneq ($(strip $(ZCHAFF)),)
+	echo "open Zchaff;;" >> ./temp/generatedsat.ml
+	echo "open Zchaffwrapper;;" >> ./temp/generatedsat.ml
+endif
+ifneq ($(strip $(MINISAT)),)
+	echo "open Minisat;;" >> ./temp/generatedsat.ml
+	echo "open Minisatwrapper;;" >> ./temp/generatedsat.ml
+endif
+
+_build/PicoSATWrap.o:
+	mkdir -p ./_build
+	gcc -c -g -I `ocamlfind printconf stdlib` -o $@ $(SAT_COMPILE_PATH)/src/picosat/backend/PicoSATWrap.cc
+
+_build/ZchaffWrap.o:
+	mkdir -p ./_build
+	gcc -c -g -I `ocamlfind printconf stdlib` -o $@ $(SAT_COMPILE_PATH)/src/zchaff/backend/ZchaffWrap.cc
+
+_build/MiniSATWrap.o:
+	mkdir -p ./_build
+	gcc -D__STDC_LIMIT_MACROS -c -I `ocamlfind printconf stdlib` -I $(MINISAT_INC) -o $@ $(SAT_COMPILE_PATH)/src/minisat/backend/MiniSATWrap.cc
+

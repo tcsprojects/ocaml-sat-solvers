@@ -1,4 +1,5 @@
 type pico_sat_result = PicoUnknown | PicoSat | PicoUnsat
+
 type pico_sat_solver
 
 external pico_init: unit -> pico_sat_solver = "pico_init"

@@ -6,7 +6,7 @@
 #define PICOSAT_UNSATISFIABLE	20
 
 extern "C" void* picosat_init (void);
-extern "C" void picosat_reset (void*);
+extern "C" void picosat_reset (void* solver);
 extern "C" void picosat_add (void* solver, int lit);
 extern "C" void picosat_assume (void* solver, int lit);
 extern "C" int picosat_sat (void* solver, int decision_limit);

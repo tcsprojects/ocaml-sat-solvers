@@ -5,7 +5,9 @@ extern "C" {
 #include <caml/memory.h>
 }
 
-#include "simp/SimpSolver.h"
+#include "minisat/simp/SimpSolver.h"
+
+using namespace Minisat;
 
 using Minisat::vec;
 using Minisat::Lit;
