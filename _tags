@@ -1,0 +1,9 @@
+"tester": include
+"src": include
+"src/pseudosat": include
+"src/externalsat": include
+"src/preprocessor": include
+"src/picosat": include
+"src/zchaff": include
+"src/minisat": include
+"temp": include

@@ -1,5 +1,6 @@
 open Satwrapper;;
 open Arg;;
+open Generatedsat;;
 
 let msg s = output_string stdout s;;
 

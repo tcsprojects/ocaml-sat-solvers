@@ -1,5 +1,6 @@
 open Satwrapper;;
 open Arg ;;
+open Generatedsat;;
 
 type rlgrammar = { start : string;
                    terminals : string list;

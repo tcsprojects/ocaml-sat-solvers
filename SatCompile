@@ -25,6 +25,7 @@ SATDEPS = $(PICOSATDEPS) $(ZCHAFFDEPS) $(MINISATDEPS)
 
 generatesat: $(SATDEPS)
 	rm -f ./temp/generatedsat.ml
+	mkdir -p ./temp
 	echo "" > ./temp/generatedsat.ml
 ifneq ($(strip $(PICOSAT)),)
 	echo "open Picosat;;" >> ./temp/generatedsat.ml
