@@ -54,4 +54,4 @@ let pseudo_factory = ref (new pseudoSolverFactory)
 
 let get_pseudo_factory = !pseudo_factory
 
-(* Satsolvers.register_solver (new pseudoSolverFactory) *)
+(* Satsolverregistry.register_solver (new pseudoSolverFactory) *)

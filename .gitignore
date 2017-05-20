@@ -15,3 +15,7 @@ src/externalsat/satsolutionparser.mli
 _build
 SatConfig
 temp
+src/local/generatedsat.ml
+setup.data
+setup.log
+compile.include

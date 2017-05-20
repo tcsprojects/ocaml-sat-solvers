@@ -1,9 +1,24 @@
-"tester": include
-"src": include
-"src/pseudosat": include
-"src/externalsat": include
-"src/preprocessor": include
-"src/picosat": include
-"src/zchaff": include
-"src/minisat": include
-"temp": include
+# OASIS_START
+# DO NOT EDIT (digest: a78bab6c57f18998f829519fda9cf2ed)
+# Ignore VCS directories, you can use the same kind of rule outside
+# OASIS_START/STOP if you want to exclude directories that contains
+# useless stuff for the build process
+true: annot, bin_annot
+<**/.svn>: -traverse
+<**/.svn>: not_hygienic
+".bzr": -traverse
+".bzr": not_hygienic
+".hg": -traverse
+".hg": not_hygienic
+".git": -traverse
+".git": not_hygienic
+"_darcs": -traverse
+"_darcs": not_hygienic
+# Library SATSolversForOcaml
+"src/SATSolversForOcaml.cmxs": use_SATSolversForOcaml
+<src/*.ml{,i,y}>: package(minisat)
+<src/externalsat/*.ml{,i,y}>: package(minisat)
+<src/preprocessor/*.ml{,i,y}>: package(minisat)
+<src/pseudosat/*.ml{,i,y}>: package(minisat)
+<src/minisat/*.ml{,i,y}>: package(minisat)
+# OASIS_STOP

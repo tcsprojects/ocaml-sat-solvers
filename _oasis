@@ -1,0 +1,24 @@
+OASISFormat: 0.4
+Name:        SATSolversForOcaml
+Version:     0.1
+Synopsis:    This library contains an abstraction layer for integrating SAT
+  Solvers into OCaml.
+Description: This library contains an abstraction layer for integrating SAT
+  Solvers into OCaml.
+Authors:     Oliver Friedmann, Martin Lange
+Maintainers: Oliver Friedmann, Martin Lange
+OCamlVersion: >= 4.03.0
+License:     BSD-3-clause
+Homepage: https://github.com/tcsprojects/satsolversforocaml
+SourceRepository head
+  Type: git
+  Location: git://github.com/tcsprojects/satsolversforocaml.git
+  Browser: https://github.com/tcsprojects/satsolversforocaml
+Plugins:     META
+BuildTools: ocamlbuild
+Library "SATSolversForOcaml"
+  Path:       src
+  BuildDepends: minisat
+  InternalModules: minisat/Minisatwrapper, Satsolverregistry
+  Modules:    Satsolvers, Satwrapper, pseudosat/Pseudosatwrapper, preprocessor/Preprocessor,
+              externalsat/Externalsat, externalsat/Satsolutionlexer, externalsat/Satsolutionparser

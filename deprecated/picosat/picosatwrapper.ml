@@ -45,4 +45,6 @@ object inherit solverFactory
 	method new_instance = new picosatSolver ()
 end;;
 
+(*
 Satsolvers.register_solver (new picosatSolverFactory)
+*)

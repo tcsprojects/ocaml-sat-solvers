@@ -1,33 +1,37 @@
 open Satwrapper;;
-open Minisat;;
 
 
 class minisatSolver _ =
-let solver = new_solver () in
+
+let solver = Minisat.create() in
+let lits = ref 0 in
+
+let litmap i = if i >= 0 then (Minisat.Lit.make i) else Minisat.Lit.neg (Minisat.Lit.make (-i)) in
+
 object inherit abstractSolver
 
-	method dispose = dispose_solver solver
+	method dispose = ()
 
 	method add_variable =
-		let i = new_var solver in
-		if i = 0 then new_var solver else i
+	    incr lits;
+	    !lits
 
-	method add_clause a = add_clause solver (Array.to_list (Array.map (fun i -> if i >= 0 then pos_lit solver i else neg_lit solver (-i)) a))
+	method add_clause a = Minisat.add_clause_l solver (Array.to_list (Array.map litmap a))
 
 	method solve =
-	  match Minisat.solve solver with
-	    SAT -> SolveSatisfiable
-	  | UNSAT -> SolveUnsatisfiable
+	  try
+	    Minisat.solve solver;
+	    SolveSatisfiable
+	  with Minisat.Unsat -> SolveUnsatisfiable
 
-        method solve_with_assumptions lits =
-        	let lits' = List.map (fun l ->
-        		if l >= 0 then Minisat.pos_lit solver l else Minisat.neg_lit solver (-l)
-        	) lits in
-          match Minisat.solve_with_assumption solver lits' with
-	    SAT -> SolveSatisfiable
-	  | UNSAT -> SolveUnsatisfiable
+    method solve_with_assumptions lits =
+        let lits' = Array.of_list (List.map litmap lits) in
+        try
+          Minisat.solve ~assumptions:lits' solver;
+          SolveSatisfiable
+        with Minisat.Unsat -> SolveUnsatisfiable
 
-	method get_assignment v = value_of solver v = PosValue
+	method get_assignment v = Minisat.value solver (Minisat.Lit.make v) = Minisat.V_true
 
 	method print_dimacs _ = failwith "unsupported method: minisat.print_dimacs"
 end;;
@@ -43,5 +47,3 @@ object inherit solverFactory
 
 	method new_instance = new minisatSolver ()
 end;;
-
-Satsolvers.register_solver (new minisatSolverFactory)

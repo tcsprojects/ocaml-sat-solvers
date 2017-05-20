@@ -1,39 +1,20 @@
-open Satwrapper;;
+open Minisatwrapper;;
 
-module String_for_set =
-struct
-  type t = string
-  let compare = compare
-end ;;
-module StringMap = Map.Make(String_for_set) ;;
+let _ =
+    Satsolverregistry.register_solver (new minisatSolverFactory);;
 
-let solvermap = ref StringMap.empty;;
+let register_solver = Satsolverregistry.register_solver;;
 
-let default = ref None;;
+let mem_solver = Satsolverregistry.mem_solver;;
 
-let register_solver solver_factory =
-	let identifier = solver_factory#identifier in
-	if StringMap.mem identifier !solvermap
-	then failwith ("Solver `" ^ identifier ^ "' already registered!\n")
-	else (
-		solvermap := StringMap.add identifier solver_factory !solvermap;
-		default := Some solver_factory
-	);;
-	
-let mem_solver identifier = StringMap.mem identifier !solvermap;;
+let find_solver = Satsolverregistry.find_solver;;
 
-let find_solver identifier = StringMap.find identifier !solvermap;;
+let enum_solvers = Satsolverregistry.enum_solvers;;
 
-let enum_solvers it = StringMap.iter (fun _ f -> it f) !solvermap;;
+let fold_solvers = Satsolverregistry.fold_solvers;;
 
-let fold_solvers fo b = StringMap.fold (fun _ f x -> fo f x) !solvermap b;;
+let get_list = Satsolverregistry.get_list;;
 
-let get_list _ = fold_solvers (fun s l -> s::l) []
+let get_default = Satsolverregistry.get_default;;
 
-let get_default _ =
-	match !default with
-		Some f -> f
-	|	None -> failwith "no sat solvers registered!"
-
-let set_default identifier =
-	default := Some (find_solver identifier)
+let set_default = Satsolverregistry.set_default;;

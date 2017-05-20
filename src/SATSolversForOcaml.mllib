@@ -1,0 +1,12 @@
+# OASIS_START
+# DO NOT EDIT (digest: b1791b28aff5ac548593e077f2417d38)
+Satsolvers
+Satwrapper
+pseudosat/Pseudosatwrapper
+preprocessor/Preprocessor
+externalsat/Externalsat
+externalsat/Satsolutionlexer
+externalsat/Satsolutionparser
+minisat/Minisatwrapper
+Satsolverregistry
+# OASIS_STOP

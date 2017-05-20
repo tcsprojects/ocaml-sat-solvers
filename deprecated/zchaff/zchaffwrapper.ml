@@ -47,4 +47,6 @@ object inherit solverFactory
 	method new_instance = new zchaffSolver ()
 end;;
 
+(*
 Satsolvers.register_solver (new zchaffSolverFactory)
+*)
