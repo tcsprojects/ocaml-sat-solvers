@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: 554bdeb6644758c4eaab34232797b72b) *)
+(* DO NOT EDIT (digest: 767236df2c740b46ca93676c5be42a18) *)
 module OASISGettext = struct
 (* # 22 "src/oasis/OASISGettext.ml" *)
 
@@ -887,7 +887,7 @@ let package_default =
   {
      MyOCamlbuildBase.lib_ocaml =
        [
-          ("SATSolversForOcaml",
+          ("ocaml-sat-solvers",
             ["src"; "src/externalsat"; "src/preprocessor"; "src/pseudosat"],
             [])
        ];

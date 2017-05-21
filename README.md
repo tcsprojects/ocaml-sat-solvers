@@ -1,4 +1,4 @@
-SAT Solvers For OCaml
+ocaml-sat-solvers
 ==================
 
 Copyright (c) 2008-2017

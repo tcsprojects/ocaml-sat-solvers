@@ -40,7 +40,7 @@ let filename_config = (Sys.getenv "HOME") ^ "/.satconfig" in
     ) parameters
 ) with Sys_error _ -> ());
 (*
-print_string "\nSATSolversForOcaml Configuration\n\n";
+print_string "\ocaml-sat-solvers Configuration\n\n";
 
 List.iter (fun (key, desc, value, _) ->
     print_string ("Configuring " ^ desc ^ "\n");

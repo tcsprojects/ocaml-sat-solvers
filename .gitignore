@@ -19,3 +19,4 @@ src/local/generatedsat.ml
 setup.data
 setup.log
 compile.include
+.DS_Store
