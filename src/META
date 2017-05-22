@@ -1,8 +1,7 @@
 # OASIS_START
-# DO NOT EDIT (digest: 40015f5dc4e22c2a55a1f9ea32dca6b6)
+# DO NOT EDIT (digest: 348e8ac6804ff96aa1763f3faf8b65a1)
 version = "0.3"
-description =
-"This library contains an abstraction layer for integrating SAT Solvers into OCaml."
+description = "An abstraction layer for integrating SAT Solvers into OCaml."
 requires = "minisat"
 archive(byte) = "ocaml-sat-solvers.cma"
 archive(byte, plugin) = "ocaml-sat-solvers.cma"
