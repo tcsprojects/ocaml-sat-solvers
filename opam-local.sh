@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 opam uninstall ocaml-sat-solvers
 opam pin remove ocaml-sat-solvers
+rm -rf ./build
 oasis setup
 ocaml setup.ml -configure
 ocaml setup.ml -build

@@ -1,6 +1,6 @@
 # OASIS_START
-# DO NOT EDIT (digest: 348e8ac6804ff96aa1763f3faf8b65a1)
-version = "0.3"
+# DO NOT EDIT (digest: 14d288fd4a27e154e0b710b7bcdafa20)
+version = "0.4"
 description = "An abstraction layer for integrating SAT Solvers into OCaml."
 requires = "minisat"
 archive(byte) = "ocaml-sat-solvers.cma"
