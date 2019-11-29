@@ -1,7 +1,9 @@
 open Minisatwrapper;;
+open Internalsatwrapper;;
 
 let _ =
-    Satsolverregistry.register_solver (new minisatSolverFactory);;
+    Satsolverregistry.register_solver (new minisatSolverFactory);
+    Satsolverregistry.register_solver (new internalSatSolverFactory);;
 
 let register_solver = Satsolverregistry.register_solver;;
 

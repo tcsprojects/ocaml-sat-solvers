@@ -19,4 +19,4 @@ Library "ocaml-sat-solvers"
   BuildDepends: minisat
   InternalModules: minisat/Minisatwrapper, Satsolverregistry
   Modules:    Satsolvers, Satwrapper, pseudosat/Pseudosatwrapper, preprocessor/Preprocessor,
-              externalsat/Externalsat, externalsat/Satsolutionlexer, externalsat/Satsolutionparser
+              externalsat/Externalsat, externalsat/Satsolutionlexer, externalsat/Satsolutionparser, internalsat/Internalsatwrapper

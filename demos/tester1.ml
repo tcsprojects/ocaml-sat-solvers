@@ -9,7 +9,7 @@ type vars = Z of int | X of int | Y of int
 
 let factorize' z =
 (*	let solver = new Satwrapper.satWrapper (new Preprocessor.preprocessorSolverFactory (Satsolvers.get_default ())) in *)
-	let solver = new Satwrapper.satWrapper (Satsolvers.get_default ()) in
+        let solver = new Satwrapper.satWrapper (Satsolvers.get_default ()) in
 	let l = binlog z in
 	let z = ref z in
 	for i = 0 to l * 2 - 1 do
@@ -40,14 +40,15 @@ let factorize' z =
 	x
 
 let rec factorize n =
-	if n <= 10 then (
+(*	if n <= 10 then (
 		if List.mem n [0; 1; 2; 3; 5; 7] then [n]
 		else if n = 4 then [2;2] else if n = 6 then [2;3] else if n = 8 then [2;2;2] else if n = 9 then [3;3] else [2;5]
 	)
-	else
+	else *)
 		match factorize' n with
 			None -> [n]
-		|	Some (a, b) -> List.sort compare ((factorize a) @ (factorize b))
+		       |	Some (a, b) -> (* [a;b] *)
+                                               List.sort compare ((factorize a) @ (factorize b))
 
 
 let list_format formater = function

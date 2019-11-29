@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: 6b9b39d6c11395e2c9ab9d7690b91276) *)
+(* DO NOT EDIT (digest: b5f7a727576fa190b59da6fa20ea2548) *)
 module OASISGettext = struct
 (* # 22 "src/oasis/OASISGettext.ml" *)
 
@@ -882,7 +882,13 @@ let package_default =
      MyOCamlbuildBase.lib_ocaml =
        [
           ("ocaml-sat-solvers",
-            ["src"; "src/externalsat"; "src/preprocessor"; "src/pseudosat"],
+            [
+               "src";
+               "src/externalsat";
+               "src/internalsat";
+               "src/preprocessor";
+               "src/pseudosat"
+            ],
             [])
        ];
      lib_c = [];
@@ -890,16 +896,49 @@ let package_default =
      includes =
        [
           ("src/pseudosat",
-            ["src"; "src/externalsat"; "src/minisat"; "src/preprocessor"]);
+            [
+               "src";
+               "src/externalsat";
+               "src/internalsat";
+               "src/minisat";
+               "src/preprocessor"
+            ]);
           ("src/preprocessor",
-            ["src"; "src/externalsat"; "src/minisat"; "src/pseudosat"]);
+            [
+               "src";
+               "src/externalsat";
+               "src/internalsat";
+               "src/minisat";
+               "src/pseudosat"
+            ]);
           ("src/minisat",
-            ["src"; "src/externalsat"; "src/preprocessor"; "src/pseudosat"]);
+            [
+               "src";
+               "src/externalsat";
+               "src/internalsat";
+               "src/preprocessor";
+               "src/pseudosat"
+            ]);
+          ("src/internalsat",
+            [
+               "src";
+               "src/externalsat";
+               "src/minisat";
+               "src/preprocessor";
+               "src/pseudosat"
+            ]);
           ("src/externalsat",
-            ["src"; "src/minisat"; "src/preprocessor"; "src/pseudosat"]);
+            [
+               "src";
+               "src/internalsat";
+               "src/minisat";
+               "src/preprocessor";
+               "src/pseudosat"
+            ]);
           ("src",
             [
                "src/externalsat";
+               "src/internalsat";
                "src/minisat";
                "src/preprocessor";
                "src/pseudosat"
@@ -912,6 +951,6 @@ let conf = {MyOCamlbuildFindlib.no_automatic_syntax = false}
 
 let dispatch_default = MyOCamlbuildBase.dispatch_default conf package_default;;
 
-# 916 "myocamlbuild.ml"
+# 955 "myocamlbuild.ml"
 (* OASIS_STOP *)
 Ocamlbuild_plugin.dispatch dispatch_default;;
