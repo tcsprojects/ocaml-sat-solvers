@@ -135,9 +135,17 @@ object (self)
 	method get_variable v =
 		self#assert_state SolverSolved "get_variable";
 		if (!solve_result != SolveSatisfiable) then failwith ("satWrapper.get_variable: not in satisfiable state");
-		if (Hashtbl.mem hash v) && (solver#get_assignment (Hashtbl.find hash v)) then 1 else 0
+		if Hashtbl.mem hash v then
+                  if (solver#get_assignment (Hashtbl.find hash v)) then 1 else 0
+                else
+                  -1
 
-	method get_variable_bool v = self#get_variable v = 1
+        method get_variable_bool (_:'a) =
+          failwith "Method `get_variable_bool: 'a -> bool´ is deprecated. Use `get_variable_bool_opt: 'a -> bool option´ instead!"
+
+	method get_variable_bool_opt v =
+          let b = self#get_variable v in
+          if b = -1 then None else Some (b=1)
 
 	method get_variable_first a =
 		let n = Array.length a in

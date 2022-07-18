@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 386e6282aa2f05861bfec204abf2380f)
+# DO NOT EDIT (digest: 91283d1f1a57622a0f6fd10fae3d44ea)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -22,4 +22,9 @@ true: annot, bin_annot
 <src/preprocessor/*.ml{,i,y}>: package(minisat)
 <src/pseudosat/*.ml{,i,y}>: package(minisat)
 <src/minisat/*.ml{,i,y}>: package(minisat)
+# Executable tester
+<demos/tester1.{native,byte}>: package(minisat)
+<demos/tester1.{native,byte}>: use_ocaml-sat-solvers
+<demos/*.ml{,i,y}>: package(minisat)
+<demos/*.ml{,i,y}>: use_ocaml-sat-solvers
 # OASIS_STOP

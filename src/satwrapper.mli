@@ -72,7 +72,9 @@ object
 
 	method get_variable: 'a -> int
 
-	method get_variable_bool: 'a -> bool
+	method get_variable_bool: 'a -> bool  (* Deprecated, use get_variable_bool_opt instead! (Value "None" occurs when a value for a variable has not been set by the SAT solver) *)
+
+	method get_variable_bool_opt: 'a -> bool option
 
 	method get_variable_first: 'a array -> int
 
