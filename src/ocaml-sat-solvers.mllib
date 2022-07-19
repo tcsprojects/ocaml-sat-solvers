@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 1f2df5d3266a30244a7ddd6e4e4f6429)
+# DO NOT EDIT (digest: 5145ea7b7a616a2a3c267a1897d77a1a)
 Satsolvers
 Satwrapper
 pseudosat/Pseudosatwrapper
@@ -9,5 +9,6 @@ externalsat/Satsolutionlexer
 externalsat/Satsolutionparser
 internalsat/Internalsatwrapper
 minisat/Minisatwrapper
+z3/Z3wrapper
 Satsolverregistry
 # OASIS_STOP

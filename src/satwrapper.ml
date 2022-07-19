@@ -48,6 +48,7 @@ let clauses = ref 0 in
 let helper_clauses = ref 0 in
 let solve_result = ref SolveUnsatisfiable in
 let hash = Hashtbl.create 10 in
+let strip = function Some b -> b | None -> failwith "Cannot strip from None." in
 object (self)
 	method dispose =
 		if !state = SolverDisposed
@@ -141,7 +142,7 @@ object (self)
                   -1
 
         method get_variable_bool (_:'a) =
-          failwith "Method `get_variable_bool: 'a -> bool´ is deprecated. Use `get_variable_bool_opt: 'a -> bool option´ instead!"
+          failwith "Method `get_variable_bool: 'a -> bool´ is deprecated. Use `get_variable_bool_opt: 'a -> bool option´ instead!"; false
 
 	method get_variable_bool_opt v =
           let b = self#get_variable v in
@@ -151,7 +152,7 @@ object (self)
 		let n = Array.length a in
 		let rec get_variable_helper i =
 			if i >= n then -1
-			else if self#get_variable_bool a.(i) then i
+			else if strip (self#get_variable_bool_opt a.(i)) then i
 			else get_variable_helper (i + 1)
 		in
 			get_variable_helper 0
@@ -159,7 +160,7 @@ object (self)
 	method get_variable_count a =
 		let c = ref 0 in
 		for i = 0 to Array.length a - 1 do
-			if self#get_variable_bool a.(i) then incr c
+			if strip (self#get_variable_bool_opt a.(i)) then incr c
 		done;
 		!c
 

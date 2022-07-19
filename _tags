@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 91283d1f1a57622a0f6fd10fae3d44ea)
+# DO NOT EDIT (digest: 9c7bd3259c19886a964ab0e26f63329e)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -17,14 +17,24 @@ true: annot, bin_annot
 # Library ocaml-sat-solvers
 "src/ocaml-sat-solvers.cmxs": use_ocaml-sat-solvers
 <src/*.ml{,i,y}>: package(minisat)
+<src/*.ml{,i,y}>: package(z3)
 <src/externalsat/*.ml{,i,y}>: package(minisat)
+<src/externalsat/*.ml{,i,y}>: package(z3)
 <src/internalsat/*.ml{,i,y}>: package(minisat)
+<src/internalsat/*.ml{,i,y}>: package(z3)
 <src/preprocessor/*.ml{,i,y}>: package(minisat)
+<src/preprocessor/*.ml{,i,y}>: package(z3)
 <src/pseudosat/*.ml{,i,y}>: package(minisat)
+<src/pseudosat/*.ml{,i,y}>: package(z3)
 <src/minisat/*.ml{,i,y}>: package(minisat)
+<src/minisat/*.ml{,i,y}>: package(z3)
+<src/z3/*.ml{,i,y}>: package(minisat)
+<src/z3/*.ml{,i,y}>: package(z3)
 # Executable tester
 <demos/tester1.{native,byte}>: package(minisat)
+<demos/tester1.{native,byte}>: package(z3)
 <demos/tester1.{native,byte}>: use_ocaml-sat-solvers
 <demos/*.ml{,i,y}>: package(minisat)
+<demos/*.ml{,i,y}>: package(z3)
 <demos/*.ml{,i,y}>: use_ocaml-sat-solvers
 # OASIS_STOP

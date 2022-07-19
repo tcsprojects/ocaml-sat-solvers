@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: 412f7240b9c47428688e88ab681c734a) *)
+(* DO NOT EDIT (digest: 397c33052de5de297b92cc3ad27821ba) *)
 module OASISGettext = struct
 (* # 22 "src/oasis/OASISGettext.ml" *)
 
@@ -895,13 +895,23 @@ let package_default =
      flags = [];
      includes =
        [
+          ("src/z3",
+            [
+               "src";
+               "src/externalsat";
+               "src/internalsat";
+               "src/minisat";
+               "src/preprocessor";
+               "src/pseudosat"
+            ]);
           ("src/pseudosat",
             [
                "src";
                "src/externalsat";
                "src/internalsat";
                "src/minisat";
-               "src/preprocessor"
+               "src/preprocessor";
+               "src/z3"
             ]);
           ("src/preprocessor",
             [
@@ -909,7 +919,8 @@ let package_default =
                "src/externalsat";
                "src/internalsat";
                "src/minisat";
-               "src/pseudosat"
+               "src/pseudosat";
+               "src/z3"
             ]);
           ("src/minisat",
             [
@@ -917,7 +928,8 @@ let package_default =
                "src/externalsat";
                "src/internalsat";
                "src/preprocessor";
-               "src/pseudosat"
+               "src/pseudosat";
+               "src/z3"
             ]);
           ("src/internalsat",
             [
@@ -925,7 +937,8 @@ let package_default =
                "src/externalsat";
                "src/minisat";
                "src/preprocessor";
-               "src/pseudosat"
+               "src/pseudosat";
+               "src/z3"
             ]);
           ("src/externalsat",
             [
@@ -933,7 +946,8 @@ let package_default =
                "src/internalsat";
                "src/minisat";
                "src/preprocessor";
-               "src/pseudosat"
+               "src/pseudosat";
+               "src/z3"
             ]);
           ("src",
             [
@@ -941,7 +955,8 @@ let package_default =
                "src/internalsat";
                "src/minisat";
                "src/preprocessor";
-               "src/pseudosat"
+               "src/pseudosat";
+               "src/z3"
             ]);
           ("demos",
             [
@@ -959,6 +974,6 @@ let conf = {MyOCamlbuildFindlib.no_automatic_syntax = false}
 
 let dispatch_default = MyOCamlbuildBase.dispatch_default conf package_default;;
 
-# 963 "myocamlbuild.ml"
+# 978 "myocamlbuild.ml"
 (* OASIS_STOP *)
 Ocamlbuild_plugin.dispatch dispatch_default;;

@@ -1,7 +1,9 @@
+open Z3wrapper;;
 open Minisatwrapper;;
 open Internalsatwrapper;;
 
 let _ =
+    Satsolverregistry.register_solver (new z3SolverFactory);
     Satsolverregistry.register_solver (new minisatSolverFactory);
     Satsolverregistry.register_solver (new internalSatSolverFactory);;
 

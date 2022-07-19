@@ -9,35 +9,36 @@ type vars = Z of int | X of int | Y of int
 
 let factorize' z =
 (*	let solver = new Satwrapper.satWrapper (new Preprocessor.preprocessorSolverFactory (Satsolvers.get_default ())) in *)
-        let solver = new Satwrapper.satWrapper (Satsolvers.get_default ()) in
-	let l = binlog z in
-	let z = ref z in
-	for i = 0 to l * 2 - 1 do
-		solver#add_clause_array [|if !z mod 2 = 0 then Ne (Z i) else Po (Z i)|];
-		z := !z / 2
-	done;
-	solver#add_clause_array (Array.init l (fun i -> if i > 0 then Po (X i) else Ne (X i)));
-	solver#add_clause_array (Array.init l (fun i -> if i > 0 then Po (Y i) else Ne (Y i)));
-	solver#add_helper_multiplication (Array.init l (fun i -> Po (X i))) (Array.init l (fun i -> Po (Y i))) (Array.init (l * 2) (fun i -> Po (Z i)));
-	solver#solve;
-	let x =
-        match solver#get_solve_result with
+  let solver = new Satwrapper.satWrapper (Satsolvers.get_default ()) in
+  let is_true = function Some true -> true | _ -> false in
+  let l = binlog z in
+  let z = ref z in
+  for i = 0 to l * 2 - 1 do
+    solver#add_clause_array [|if !z mod 2 = 0 then Ne (Z i) else Po (Z i)|];
+    z := !z / 2
+  done;
+  solver#add_clause_array (Array.init l (fun i -> if i > 0 then Po (X i) else Ne (X i)));
+  solver#add_clause_array (Array.init l (fun i -> if i > 0 then Po (Y i) else Ne (Y i)));
+  solver#add_helper_multiplication (Array.init l (fun i -> Po (X i))) (Array.init l (fun i -> Po (Y i))) (Array.init (l * 2) (fun i -> Po (Z i)));
+  solver#solve;
+  let x =
+    match solver#get_solve_result with
             SolveSatisfiable -> Some (
-            	let x = ref 0 in
-            	let y = ref 0 in
-            	for i = l - 1 downto 0 do
-            		x := !x * 2;
-            		y := !y * 2;
-            		if solver#get_variable_bool (X i) then incr x;
-            		if solver#get_variable_bool (Y i) then incr y
-            	done;
-            	(!x, !y)
-            )
+            	                    let x = ref 0 in
+            	                    let y = ref 0 in
+            	                    for i = l - 1 downto 0 do
+            		              x := !x * 2;
+            		              y := !y * 2;
+            		              if is_true (solver#get_variable_bool_opt (X i)) then incr x;
+            		              if is_true (solver#get_variable_bool_opt (Y i)) then incr y
+            	                    done;
+            	                    (!x, !y)
+                                  )
         |   SolveUnsatisfiable -> None
         |   SolveFailure s -> failwith s
     in
-	solver#dispose;
-	x
+    solver#dispose;
+    x
 
 let rec factorize n =
 (*	if n <= 10 then (
