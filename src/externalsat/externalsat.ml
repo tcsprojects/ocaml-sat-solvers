@@ -1,6 +1,6 @@
 open Satwrapper;;
 
-class externalSolver (filename: string) =
+class externalSolver (filename: string) (_: Timing.timetable) =
 
     let var_count = ref 0 in
     let clauses = ref [] in
@@ -52,5 +52,5 @@ object inherit solverFactory
 	method copyright = "Copyright (c) University of Munich"
 	method url = "http://www.tcs.ifi.lmu.de"
 
-	method new_instance = new externalSolver filename
+	method new_timed_instance timetable = new externalSolver filename timetable
 end;;

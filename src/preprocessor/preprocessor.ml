@@ -9,7 +9,7 @@ module IntSet = Set.Make(Int_for_set) ;;
 
 type vartype = VarUndef | VarTrue | VarFalse
 
-class preprocessorSolver (solver: abstractSolver) =
+class preprocessorSolver (solver: abstractSolver) (_: Timing.timetable) =
 
 	let variables = Hashtbl.create 10 in
 	let clauses = Hashtbl.create 10 in
@@ -320,5 +320,5 @@ object inherit solverFactory
 	method copyright = "Copyright (c) University of Munich"
 	method url = "http://www.tcs.ifi.lmu.de"
 
-	method new_instance = new preprocessorSolver (factory#new_instance)
+	method new_timed_instance timetable = new preprocessorSolver (factory#new_timed_instance timetable) timetable
 end;;

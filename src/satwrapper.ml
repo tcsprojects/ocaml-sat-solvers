@@ -1,3 +1,5 @@
+open Printf;;
+
 type solve_result =
   SolveFailure of string
 | SolveUnsatisfiable
@@ -9,26 +11,26 @@ let format_solve_result = function
 |	SolveSatisfiable -> "Satisfiable"
 
 class virtual abstractSolver =
-object
-	method virtual dispose: unit
-	method virtual add_variable: int
-	method virtual add_clause: int array -> unit
-	method virtual solve: solve_result
-	method virtual solve_with_assumptions: int list -> solve_result
-	method virtual get_assignment: int -> bool
-	method incremental_reset = ()
-	method virtual print_dimacs: out_channel -> unit
-                                                      (*  method virtual show_state: string *)
+        object
+	  method virtual dispose: unit
+	  method virtual add_variable: int
+	  method virtual add_clause: int array -> unit
+	  method virtual solve: solve_result
+	  method virtual solve_with_assumptions: int list -> solve_result
+	  method virtual get_assignment: int -> bool
+	  method incremental_reset = ()
+	  method virtual print_dimacs: out_channel -> unit
 end
 
 class virtual solverFactory =
-object
+object (self)
 	method virtual description: string
 	method virtual identifier: string
 	method virtual short_identifier: string
 	method virtual copyright: string
 	method virtual url: string
-	method virtual new_instance: abstractSolver
+	method virtual new_timed_instance: Timing.timetable -> abstractSolver
+        method new_instance = self#new_timed_instance (Timing.dummy_timetable)
 end
 
 
@@ -40,163 +42,167 @@ type 'a formula = And of 'a formula array
                 | Not of 'a formula
                 | Atom of 'a
 
-
-class ['a] satWrapper (factory: solverFactory) =
-let solver = factory#new_instance in
-let state = ref SolverInit in
-let variables = ref 0 in
-let helper_variables = ref 0 in
-let literals = ref 0 in
-let helper_literals = ref 0 in
-let clauses = ref 0 in
-let helper_clauses = ref 0 in
-let solve_result = ref (SolveFailure("no solving attempt carried out yet")) in
-let hash = Hashtbl.create 10 in
-let strip = function Some b -> b | None -> failwith "Cannot strip from None." in
-object (self)
-	method dispose =
-		if !state = SolverDisposed
-		then failwith "satWrapper.dispose: Already disposed."
-		else (
-			solver#dispose;
-			state := SolverDisposed
-		)
-
-	method get_solver = solver
-
-	method get_state = !state
-
-	method get_solve_result =
-		if !state = SolverSolved
-		then !solve_result
-		else failwith "satWrapper.get_solve_result: Either not solved or disposed."
-
-	method incremental_reset =
-		if !state = SolverSolved then (
-			solver#incremental_reset;
-			state := SolverInit
-		)
-		else failwith "satWrapper.incremental_reset: Wrong state"
-
-	method solve =
-		if !state = SolverInit
-		then (
-			state := SolverSolved;
-			solve_result := solver#solve
-		)
-		else failwith "satWrapper.solve: Already solved or disposed."
-
-	method solve_with_assumptions lits =
-		if !state = SolverInit
-		then (
-			state := SolverSolved;
-			solve_result := solver#solve_with_assumptions (List.map self#translate_literal lits)
-		)
-		else failwith "satWrapper.solve_with_assumptions: Already solved or disposed."
-
-        method show_state =
-          let sstate = function SolverSolved -> "Solved"
-                              | SolverInit -> "Init"
-                              | SolverDisposed -> "Disposed"
-          in
-          let sresult = function SolveFailure(e) -> "Fail(" ^ e ^ ")" 
-                               | SolveUnsatisfiable -> "Unsat"
-                               | SolveSatisfiable -> "Sat"
-          in
-          "state: " ^ sstate !state ^ ", result: " ^ sresult !solve_result
-
-	method variable_count = !variables
-
-	method helper_variable_count = !helper_variables
-
-	method clause_count = !clauses
-
-	method helper_clause_count = !helper_clauses
-
-	method literal_count = !literals
-
-	method helper_literal_count = !helper_literals
-
-	method private assert_state (s: state) (funct: string) =
-		if !state != s then failwith ("satWrapper." ^ funct ^ ": Wrong state.")
-
-	method private get_var (v: 'a) =
-		if Hashtbl.mem hash v
-		then Hashtbl.find hash v
-		else (
-			let n = solver#add_variable in
-			Hashtbl.add hash v n;
-			variables := !variables + 1;
-			n
-		)
-
-	method private translate_literal = function
-		Po x -> self#get_var x
-	|	Ne x -> - (self#get_var x)
-
-	method add_clause_array a =
-		self#assert_state SolverInit "add_clause";
-		clauses := !clauses + 1;
-		literals := !literals + (Array.length a);
-		solver#add_clause (Array.map self#translate_literal a)
-
-	method add_clause_list l =
-		self#add_clause_array (Array.of_list l)
-
-        method add_unit_clause c =
-                self#add_clause_array [| c |]
-
-	method mem_variable v = Hashtbl.mem hash v
-
-	method get_variable v =
-		self#assert_state SolverSolved "get_variable";
-		if (!solve_result != SolveSatisfiable) then failwith ("satWrapper.get_variable: not in satisfiable state");
-		if Hashtbl.mem hash v then
-                  if (solver#get_assignment (self#get_var v)) then 1 else 0
-                else
-                  -1
-
-        method get_variable_bool (_:'a) : bool =
-          failwith "Method `get_variable_bool: 'a -> bool´ is deprecated. Use `get_variable_bool_opt: 'a -> bool option´ instead!"
-
-	method get_variable_bool_opt v =
-          let b = self#get_variable v in
-          if b = -1 then None else Some (b=1)
-
-	method get_variable_first a =
-		let n = Array.length a in
-		let rec get_variable_helper i =
-			if i >= n then -1
-			else if strip (self#get_variable_bool_opt a.(i)) then i
-			else get_variable_helper (i + 1)
-		in
-			get_variable_helper 0
-
-	method get_variable_count a =
-		let c = ref 0 in
-		for i = 0 to Array.length a - 1 do
-			if strip (self#get_variable_bool_opt a.(i)) then incr c
-		done;
-		!c
-
-
-	method private create_helper_variable =
-		let i = solver#add_variable in
-		helper_variables := !helper_variables + 1;
-		i
-
-	method private create_helper_variables (n: int) =
-		Array.init n (fun _ -> self#create_helper_variable)
-
-	method private add_helper_clause_array (a: int array) =
-		helper_clauses := !helper_clauses + 1;
-		helper_literals := !helper_literals + (Array.length a);
-		solver#add_clause a
-
-	method add_helper_atleastone lo hi p f =
-		self#assert_state SolverInit "add_clause";
-		let p = Array.map (self#translate_literal) p in
-		self#add_helper_clause_array (Array.append (Array.init (hi - lo + 1) (fun i -> self#translate_literal (f (i + lo)))) p)
+                
+class ['a] satWrapper (factory: solverFactory) (maybe_timetable: Timing.timetable option) =
+  let solver = match maybe_timetable with
+      Some timetable -> factory#new_timed_instance timetable
+    | None -> factory#new_instance
+  in
+  let state = ref SolverInit in
+  let variables = ref 0 in
+  let helper_variables = ref 0 in
+  let literals = ref 0 in
+  let helper_literals = ref 0 in
+  let clauses = ref 0 in
+  let helper_clauses = ref 0 in
+  let solve_result = ref (SolveFailure("no solving attempt carried out yet")) in
+  let hash = Hashtbl.create 10 in
+  let strip = function Some b -> b | None -> failwith "Cannot strip from None." in
+  object (self)
+       
+    method dispose =
+      if !state = SolverDisposed
+      then failwith "satWrapper.dispose: Already disposed."
+      else (
+        solver#dispose;
+        state := SolverDisposed
+      )
+      
+    method get_solver = solver
+                      
+    method get_state = !state
+                   
+    method get_solve_result =
+      if !state = SolverSolved
+      then !solve_result
+      else failwith "satWrapper.get_solve_result: Either not solved or disposed."
+      
+    method incremental_reset =
+      if !state = SolverSolved then (
+	solver#incremental_reset;
+	state := SolverInit
+      )
+      else failwith "satWrapper.incremental_reset: Wrong state"
+      
+    method solve =
+      if !state = SolverInit
+      then (
+	state := SolverSolved;
+	solve_result := solver#solve
+      )
+      else failwith "satWrapper.solve: Already solved or disposed."
+      
+    method solve_with_assumptions lits =
+      if !state = SolverInit
+      then (
+	state := SolverSolved;
+	solve_result := solver#solve_with_assumptions (List.map self#translate_literal lits)
+      )
+      else failwith "satWrapper.solve_with_assumptions: Already solved or disposed."
+      
+    method show_state =
+      let sstate = function SolverSolved -> "Solved"
+                          | SolverInit -> "Init"
+                          | SolverDisposed -> "Disposed"
+      in
+      let sresult = function SolveFailure(e) -> "Fail(" ^ e ^ ")" 
+                           | SolveUnsatisfiable -> "Unsat"
+                           | SolveSatisfiable -> "Sat"
+      in
+      "state: " ^ sstate !state ^ ", result: " ^ sresult !solve_result
+      
+    method variable_count = !variables
+                          
+    method helper_variable_count = !helper_variables
+                                 
+    method clause_count = !clauses
+                        
+    method helper_clause_count = !helper_clauses
+                               
+    method literal_count = !literals
+                         
+    method helper_literal_count = !helper_literals
+                                
+    method private assert_state (s: state) (funct: string) =
+      if !state != s then failwith ("satWrapper." ^ funct ^ ": Wrong state.")
+      
+    method private get_var (v: 'a) =
+      if Hashtbl.mem hash v
+      then Hashtbl.find hash v
+      else (
+	let n = solver#add_variable in
+	Hashtbl.add hash v n;
+	variables := !variables + 1;
+	n
+      )
+      
+    method private translate_literal = function
+	Po x -> self#get_var x
+       |	Ne x -> - (self#get_var x)
+                      
+    method add_clause_array a =
+      self#assert_state SolverInit "add_clause";
+      clauses := !clauses + 1;
+      literals := !literals + (Array.length a);
+      solver#add_clause (Array.map self#translate_literal a)
+      
+    method add_clause_list l =
+      self#add_clause_array (Array.of_list l)
+      
+    method add_unit_clause c =
+      self#add_clause_array [| c |]
+      
+    method mem_variable v = Hashtbl.mem hash v
+                          
+    method get_variable v =
+      self#assert_state SolverSolved "get_variable";
+      if (!solve_result != SolveSatisfiable) then failwith ("satWrapper.get_variable: not in satisfiable state");
+      if Hashtbl.mem hash v then
+        if (solver#get_assignment (self#get_var v)) then 1 else 0
+      else
+        -1
+      
+    method get_variable_bool (_:'a) : bool =
+      failwith "Method `get_variable_bool: 'a -> bool´ is deprecated. Use `get_variable_bool_opt: 'a -> bool option´ instead!"
+      
+    method get_variable_bool_opt v =
+      let b = self#get_variable v in
+      if b = -1 then None else Some (b=1)
+      
+    method get_variable_first a =
+      let n = Array.length a in
+      let rec get_variable_helper i =
+	if i >= n then -1
+	else if strip (self#get_variable_bool_opt a.(i)) then i
+	else get_variable_helper (i + 1)
+      in
+      get_variable_helper 0
+      
+    method get_variable_count a =
+      let c = ref 0 in
+      for i = 0 to Array.length a - 1 do
+	if strip (self#get_variable_bool_opt a.(i)) then incr c
+      done;
+      !c
+      
+      
+    method private create_helper_variable =
+      let i = solver#add_variable in
+      helper_variables := !helper_variables + 1;
+      i
+      
+    method private create_helper_variables (n: int) =
+      Array.init n (fun _ -> self#create_helper_variable)
+      
+    method private add_helper_clause_array (a: int array) =
+      helper_clauses := !helper_clauses + 1;
+      helper_literals := !helper_literals + (Array.length a);
+      solver#add_clause a
+      
+    method add_helper_atleastone lo hi p f =
+      self#assert_state SolverInit "add_clause";
+      let p = Array.map (self#translate_literal) p in
+      self#add_helper_clause_array (Array.append (Array.init (hi - lo + 1) (fun i -> self#translate_literal (f (i + lo)))) p)
 
 	method private add_helper_lowereqone lo hi p f exact =
 		self#assert_state SolverInit "add_helper_clause";

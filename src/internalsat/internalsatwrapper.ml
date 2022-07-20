@@ -12,7 +12,7 @@ module LitSet = Set.Make(struct
                     let compare = compare
                   end);;
 
-class internalSatSolver _ =
+class internalSatSolver (_: Timing.timetable) =
 
 (* let solver = Minisat.create() in
  * let result = ref None in
@@ -22,7 +22,9 @@ class internalSatSolver _ =
 let lits     = ref 0 in
 let clauses  = ref [] in
 let solution = ref LitSet.empty in
-               
+
+(* let time_solve = Timing.time timetable "SAT solving" in *)
+
 object (this) inherit abstractSolver
 
 	method dispose = ()
@@ -138,6 +140,5 @@ object inherit solverFactory
 	method short_identifier = "in"
 	method copyright = "Copyright (c) Oliver Friedmann, Martin Lange"
 	method url = "https://github.com/tcsprojects/ocaml-sat-solvers"
-
-	method new_instance = new internalSatSolver ()
+	method new_timed_instance timetable = new internalSatSolver timetable
 end;;

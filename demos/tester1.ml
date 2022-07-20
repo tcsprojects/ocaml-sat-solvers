@@ -7,9 +7,11 @@ let binlog n = int_of_float (ceil ((log (float_of_int n)) /. (log 2.)))
 
 type vars = Z of int | X of int | Y of int
 
+let timetable = Timing.initial_timetable ()
+
 let factorize' z =
 (*	let solver = new Satwrapper.satWrapper (new Preprocessor.preprocessorSolverFactory (Satsolvers.get_default ())) in *)
-  let solver = new Satwrapper.satWrapper (Satsolvers.get_default ()) in
+  let solver = new Satwrapper.satWrapper (Satsolvers.get_default ()) (Some timetable) in
   let is_true = function Some true -> true | _ -> false in
   let l = binlog z in
   let z = ref z in
@@ -78,17 +80,7 @@ open CommandLine ;;
 let _ =
     let numb = ref (-1) in
     Arg.parse speclist (fun n -> numb := int_of_string n) usage;
-	let n = !numb in
-	if n = -1 then failwith "no number given - try ./tester --help";
-	(*
-	msg ("Registered sat solvers:\n");
-	Satsolvers.enum_solvers (fun fact ->
-		msg (fact#identifier ^ "\n")
-	);
-	*)
-	msg (string_of_int n ^ " = ");
-	let l = Array.of_list (factorize n) in
-	for i = 0 to Array.length l - 2 do
-		msg (string_of_int l.(i) ^ " * ")
-	done;
-	msg (string_of_int l.(Array.length l - 1) ^ "\n");
+    let n = !numb in
+    if n = -1 then failwith "no number given - try ./tester --help";
+    msg (string_of_int n ^ " = " ^ String.concat " * " (List.map string_of_int (factorize n)) ^ "\n");
+    msg (Timing.report_times timetable ^ "\n")

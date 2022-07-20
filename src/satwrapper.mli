@@ -21,7 +21,8 @@ object
 	method virtual short_identifier: string
 	method virtual copyright: string
 	method virtual url: string
-	method virtual new_instance: abstractSolver
+	method virtual new_timed_instance: Timing.timetable -> abstractSolver
+	method new_instance : abstractSolver
 end
 
 
@@ -34,77 +35,77 @@ type 'a formula = And of 'a formula array
                 | Atom of 'a
 
 
-class ['a] satWrapper : solverFactory ->
+class ['a] satWrapper : solverFactory -> Timing.timetable option ->
 object
-	method dispose: unit
+  method dispose: unit
 
-	method get_solver: abstractSolver
+  method get_solver: abstractSolver
 
-	method get_state: state
+  method get_state: state
 
-	method get_solve_result: solve_result
+  method get_solve_result: solve_result
 
-	method incremental_reset: unit
+  method incremental_reset: unit
 
-	method solve: unit
+  method solve: unit
 
-	method solve_with_assumptions: ('a literal list) -> unit
+  method solve_with_assumptions: ('a literal list) -> unit
 
-        method show_state: string
-             
-	method variable_count: int
+  method show_state: string
+       
+  method variable_count: int
 
-	method helper_variable_count: int
+  method helper_variable_count: int
 
-	method clause_count: int
+  method clause_count: int
 
-	method helper_clause_count: int
+  method helper_clause_count: int
 
-	method literal_count: int
+  method literal_count: int
 
-	method helper_literal_count: int
+  method helper_literal_count: int
 
-	method add_clause_array: ('a literal array) -> unit
+  method add_clause_array: ('a literal array) -> unit
 
-	method add_clause_list: ('a literal list) -> unit
+  method add_clause_list: ('a literal list) -> unit
 
-        method add_unit_clause: ('a literal) -> unit
+  method add_unit_clause: ('a literal) -> unit
 
-	method mem_variable: 'a -> bool
+  method mem_variable: 'a -> bool
 
-	method get_variable: 'a -> int
+  method get_variable: 'a -> int
 
-	method get_variable_bool: 'a -> bool  (* Deprecated, use get_variable_bool_opt instead! (Value "None" occurs when a value for a variable has not been set by the SAT solver) *)
+  method get_variable_bool: 'a -> bool  (* Deprecated, use get_variable_bool_opt instead! (Value "None" occurs when a value for a variable has not been set by the SAT solver) *)
 
-	method get_variable_bool_opt: 'a -> bool option
+  method get_variable_bool_opt: 'a -> bool option
 
-	method get_variable_first: 'a array -> int
+  method get_variable_first: 'a array -> int
 
-	method get_variable_count: 'a array -> int
+  method get_variable_count: 'a array -> int
 
-	method add_helper_atleastone: int -> int -> 'a literal array -> (int -> 'a literal) -> unit
+  method add_helper_atleastone: int -> int -> 'a literal array -> (int -> 'a literal) -> unit
 
-	method add_helper_atmostone: int -> int -> 'a literal array -> (int -> 'a literal) -> unit
+  method add_helper_atmostone: int -> int -> 'a literal array -> (int -> 'a literal) -> unit
 
-	method add_helper_exactlyone: int -> int -> 'a literal array -> (int -> 'a literal) -> unit
+  method add_helper_exactlyone: int -> int -> 'a literal array -> (int -> 'a literal) -> unit
 
-	method add_helper_conjunction: 'a literal -> 'a literal array -> unit
+  method add_helper_conjunction: 'a literal -> 'a literal array -> unit
 
-	method add_helper_disjunction: 'a literal -> 'a literal array -> unit
+  method add_helper_disjunction: 'a literal -> 'a literal array -> unit
 
-	method add_helper_equivalent: 'a literal -> 'a literal -> unit
+  method add_helper_equivalent: 'a literal -> 'a literal -> unit
 
-	method add_helper_equivalent_to_counterequivalent: 'a literal -> 'a literal -> 'a literal -> unit
+  method add_helper_equivalent_to_counterequivalent: 'a literal -> 'a literal -> 'a literal -> unit
 
-	method add_helper_atleastcount: int -> int -> int -> 'a literal array -> (int -> 'a literal) -> unit
+  method add_helper_atleastcount: int -> int -> int -> 'a literal array -> (int -> 'a literal) -> unit
 
-	method add_helper_atmostcount: int -> int -> int -> 'a literal array -> (int -> 'a literal) -> unit
+  method add_helper_atmostcount: int -> int -> int -> 'a literal array -> (int -> 'a literal) -> unit
 
-	method add_helper_addition: 'a literal array -> 'a literal array -> 'a literal array -> unit
+  method add_helper_addition: 'a literal array -> 'a literal array -> 'a literal array -> unit
 
-	method add_helper_multiplication: 'a literal array -> 'a literal array -> 'a literal array -> unit
+  method add_helper_multiplication: 'a literal array -> 'a literal array -> 'a literal array -> unit
 
-	method add_helper_not_equal_pairs: ('a literal * 'a literal) array -> unit
+  method add_helper_not_equal_pairs: ('a literal * 'a literal) array -> unit
 
-	method add_formula: 'a formula -> unit
+  method add_formula: 'a formula -> unit
 end

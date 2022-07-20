@@ -1,7 +1,7 @@
 open Satwrapper;;
 
 
-class pseudoSolver _ =
+class pseudoSolver (_: Timing.timetable) =
 let vars = ref 0 in
 let clauses = ref [] in
 let clause_count = ref 0 in
@@ -22,7 +22,7 @@ object inherit abstractSolver
 
 	method solve = SolveFailure ("pseudo solver cannot solve")
 
-    method solve_with_assumptions _ = SolveFailure ("pseudo solver cannot solve at all, especially not under some silly assumptions")
+        method solve_with_assumptions _ = SolveFailure ("pseudo solver cannot solve at all, especially not under some silly assumptions")
 
 	method get_assignment v = failwith "pseudo solver get assignment"
 
@@ -46,7 +46,7 @@ object inherit solverFactory
 	method copyright = "Copyright (c) University of Munich"
 	method url = "http://www.tcs.ifi.lmu.de"
 
-	method new_instance = new pseudoSolver ()
+	method new_timed_instance timetable = new pseudoSolver timetable
 end;;
 
 

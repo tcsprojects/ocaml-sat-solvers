@@ -53,8 +53,10 @@ let showVar = function D(a,i) -> "D(" ^ a ^ "," ^ string_of_int i ^ ")"
 let show = function Po(v) -> showVar v
                   | Ne(v) -> "-" ^ showVar v
 
+let timetable = Timing.initial_timetable ()
+
 let check _ =
-  let solver = new Satwrapper.satWrapper (Satsolvers.get_default ()) in
+  let solver = new Satwrapper.satWrapper (Satsolvers.get_default ()) (Some timetable) in
 
   let clauses = ref [] in
 
@@ -109,6 +111,7 @@ let check _ =
     | SolveUnsatisfiable -> print_string ("No word of length " ^ string_of_int i ^ " can be derived.\n")
     | SolveFailure(s)    -> print_string ("Something has gone wrong at stage " ^ string_of_int i ^ ": " ^ s ^ "\n"));
 
+    print_string (Timing.report_times timetable ^ "\n");
     solver#incremental_reset;
 
     (* delete clause about starting symbol *)
