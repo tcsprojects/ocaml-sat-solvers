@@ -50,6 +50,8 @@ object
 
 	method solve_with_assumptions: ('a literal list) -> unit
 
+        method show_state: string
+             
 	method variable_count: int
 
 	method helper_variable_count: int

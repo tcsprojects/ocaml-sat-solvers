@@ -100,9 +100,12 @@ let check _ =
     feed_clauses ();
 
     (* solve using assumptions to blind out the Start(i)-Literal and the clauses containing TooShort-Literals *)
+    print_string ("break point 1: " ^ solver#show_state ^ "\n");
     solver#solve_with_assumptions [ Ne(Start(i)) ];
+    print_string ("break point 2: " ^ solver#show_state ^ "\n");
     (match solver#get_solve_result with
-      SolveSatisfiable -> let solution = List.map (fun j -> List.find (fun a -> 1 = solver#get_variable (D(a,j))) grammar.terminals) 
+      SolveSatisfiable -> print_string ("break point 3: " ^ solver#show_state ^ "\n");
+                          let solution = List.map (fun j -> List.find (fun a -> 1 = solver#get_variable (D(a,j))) grammar.terminals) 
                                                   (downfrom i) 
                           in
                           print_string ("A derivable word of length " ^ string_of_int i ^ " is " ^ String.concat "" solution ^ ".\n")

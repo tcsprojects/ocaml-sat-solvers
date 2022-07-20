@@ -1,4 +1,7 @@
-type solve_result = SolveFailure of string | SolveUnsatisfiable | SolveSatisfiable
+type solve_result =
+  SolveFailure of string
+| SolveUnsatisfiable
+| SolveSatisfiable
 
 let format_solve_result = function
 	SolveFailure s -> "SolveFailure: " ^ s
@@ -15,6 +18,7 @@ object
 	method virtual get_assignment: int -> bool
 	method incremental_reset = ()
 	method virtual print_dimacs: out_channel -> unit
+                                                      (*  method virtual show_state: string *)
 end
 
 class virtual solverFactory =
@@ -46,7 +50,7 @@ let literals = ref 0 in
 let helper_literals = ref 0 in
 let clauses = ref 0 in
 let helper_clauses = ref 0 in
-let solve_result = ref SolveUnsatisfiable in
+let solve_result = ref (SolveFailure("no solving attempt carried out yet")) in
 let hash = Hashtbl.create 10 in
 let strip = function Some b -> b | None -> failwith "Cannot strip from None." in
 object (self)
@@ -89,6 +93,17 @@ object (self)
 			solve_result := solver#solve_with_assumptions (List.map self#translate_literal lits)
 		)
 		else failwith "satWrapper.solve_with_assumptions: Already solved or disposed."
+
+        method show_state =
+          let sstate = function SolverSolved -> "Solved"
+                              | SolverInit -> "Init"
+                              | SolverDisposed -> "Disposed"
+          in
+          let sresult = function SolveFailure(e) -> "Fail(" ^ e ^ ")" 
+                               | SolveUnsatisfiable -> "Unsat"
+                               | SolveSatisfiable -> "Sat"
+          in
+          "state: " ^ sstate !state ^ ", result: " ^ sresult !solve_result
 
 	method variable_count = !variables
 
@@ -137,12 +152,12 @@ object (self)
 		self#assert_state SolverSolved "get_variable";
 		if (!solve_result != SolveSatisfiable) then failwith ("satWrapper.get_variable: not in satisfiable state");
 		if Hashtbl.mem hash v then
-                  if (solver#get_assignment (Hashtbl.find hash v)) then 1 else 0
+                  if (solver#get_assignment (self#get_var v)) then 1 else 0
                 else
                   -1
 
-        method get_variable_bool (_:'a) =
-          failwith "Method `get_variable_bool: 'a -> bool´ is deprecated. Use `get_variable_bool_opt: 'a -> bool option´ instead!"; false
+        method get_variable_bool (_:'a) : bool =
+          failwith "Method `get_variable_bool: 'a -> bool´ is deprecated. Use `get_variable_bool_opt: 'a -> bool option´ instead!"
 
 	method get_variable_bool_opt v =
           let b = self#get_variable v in
