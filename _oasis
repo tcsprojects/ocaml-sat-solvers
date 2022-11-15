@@ -1,6 +1,6 @@
 OASISFormat: 0.4
 Name:        ocaml-sat-solvers
-Version:     0.7
+Version:     0.7.1
 Synopsis:    An abstraction layer for integrating SAT Solvers into OCaml
 Description: An abstraction layer for integrating SAT Solvers into OCaml.
 Authors:     Oliver Friedmann, Martin Lange

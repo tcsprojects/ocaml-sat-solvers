@@ -1,7 +1,8 @@
 opam-version: "2.0"
 maintainer: "opam-devel@lists.ocaml.org"
 authors: [ "Oliver Friedmann"
-           "Martin Lange" ]
+           "Martin Lange"
+           "Maurice Herwig" ]
 license: "BSD-3-clause"
 homepage: "https://github.com/tcsprojects/ocaml-sat-solvers"
 dev-repo: "git://github.com/tcsprojects/ocaml-sat-solvers.git"
