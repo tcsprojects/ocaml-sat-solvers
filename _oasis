@@ -1,11 +1,11 @@
 OASISFormat: 0.4
 Name:        ocaml-sat-solvers
-Version:     0.6
-Synopsis:    An abstraction layer for integrating SAT Solvers into OCaml.
+Version:     0.7
+Synopsis:    An abstraction layer for integrating SAT Solvers into OCaml
 Description: An abstraction layer for integrating SAT Solvers into OCaml.
 Authors:     Oliver Friedmann, Martin Lange
 Maintainers: Oliver Friedmann, Martin Lange
-OCamlVersion: >= 4.03.0
+OCamlVersion: >= 4.08.0
 License:     BSD-3-clause
 Homepage: https://github.com/tcsprojects/ocaml-sat-solvers
 SourceRepository head
@@ -18,7 +18,7 @@ Library "ocaml-sat-solvers"
   Path:       src
   BuildDepends: minisat (>= 0.4), z3 (>= 4.8.11)
   InternalModules: minisat/Minisatwrapper, z3/Z3wrapper, Satsolverregistry
-  Modules:    Satsolvers, Satwrapper, pseudosat/Pseudosatwrapper, preprocessor/Preprocessor,
+  Modules:    Satsolvers, Satwrapper, Timing, pseudosat/Pseudosatwrapper, preprocessor/Preprocessor,
               externalsat/Externalsat, externalsat/Satsolutionlexer, externalsat/Satsolutionparser, 
               internalsat/Internalsatwrapper
   CompiledObject: best

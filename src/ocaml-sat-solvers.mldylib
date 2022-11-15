@@ -1,7 +1,8 @@
 # OASIS_START
-# DO NOT EDIT (digest: 5145ea7b7a616a2a3c267a1897d77a1a)
+# DO NOT EDIT (digest: ff496809d21ec43a593c261d38020d6e)
 Satsolvers
 Satwrapper
+Timing
 pseudosat/Pseudosatwrapper
 preprocessor/Preprocessor
 externalsat/Externalsat
