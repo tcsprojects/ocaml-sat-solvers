@@ -1,0 +1,9 @@
+(executables
+ (names tester1 tester2 tester3)
+ (modules tester1 tester2 tester3)
+ (libraries ocaml_sat_solvers)
+  (flags (:standard
+         -ccopt -L/opt/homebrew/lib
+         -cclib -lz3
+         -cclib -Wl,-rpath,/opt/homebrew/lib))
+)

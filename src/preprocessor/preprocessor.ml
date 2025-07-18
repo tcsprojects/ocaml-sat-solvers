@@ -33,7 +33,7 @@ object (self) inherit abstractSolver
 		clause_counter := 0;
 		clause_num := 0
 
-	method incremental_reset = solver#incremental_reset
+	method! incremental_reset = solver#incremental_reset
 
 	method add_variable =
 		incr var_counter;

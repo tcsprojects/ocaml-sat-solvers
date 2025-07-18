@@ -1,5 +1,3 @@
-open Printf;;
-
 type solve_result =
   SolveFailure of string
 | SolveUnsatisfiable

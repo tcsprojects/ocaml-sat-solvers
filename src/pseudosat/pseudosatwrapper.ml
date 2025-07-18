@@ -24,7 +24,7 @@ object inherit abstractSolver
 
         method solve_with_assumptions _ = SolveFailure ("pseudo solver cannot solve at all, especially not under some silly assumptions")
 
-	method get_assignment v = failwith "pseudo solver get assignment"
+	method get_assignment _ = failwith "pseudo solver get assignment"
 
 	method print_dimacs outhandle =
 		let write s = output_string outhandle s in

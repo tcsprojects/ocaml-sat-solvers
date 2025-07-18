@@ -1,5 +1,3 @@
-open Satwrapper;;
-
 module String_for_set =
 struct
   type t = string

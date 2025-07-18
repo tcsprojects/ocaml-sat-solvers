@@ -1,0 +1,12 @@
+(rule
+ (targets satsolutionlexer.ml)
+ (deps satsolutionlexer.mll)
+ (action
+  (run ocamllex -q %{deps})))
+
+(rule
+ (targets satsolutionparser.ml satsolutionparser.mli)
+ (deps satsolutionparser.mly)
+ (action
+  (run ocamlyacc satsolutionparser.mly))
+)  

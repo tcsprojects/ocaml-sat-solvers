@@ -1,0 +1,8 @@
+(library
+ (name ocaml_sat_solvers)
+ (public_name ocaml-sat-solvers)
+ (wrapped false)
+ (flags (:standard -w -32))
+ (libraries minisat z3)
+)
+(include_subdirs unqualified)

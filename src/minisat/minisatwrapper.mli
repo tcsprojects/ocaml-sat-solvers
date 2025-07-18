@@ -1,5 +1,4 @@
 open Satwrapper;;
-open Minisat;;
 
 class minisatSolverFactory: object inherit solverFactory
 	method description: string

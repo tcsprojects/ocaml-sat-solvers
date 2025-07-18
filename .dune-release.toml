@@ -1,0 +1,6 @@
+[package]
+name = "ocaml-sat-solvers"
+
+[publish]
+# Dune will already generate the opam file, don't look in ./opam/
+opam = "ocaml-sat-solvers.opam"
