@@ -14,7 +14,7 @@
    (ocaml (>= 4.8))
    dune
    (minisat (>= 0.4))
-   (z3 (>= 4.8.11))
+   (z3 (>= 4.13.2))
  )
  (license "BSD-3-clause")
  (authors "Oliver Friedmann" "Martin Lange") 
